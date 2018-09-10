@@ -35,12 +35,12 @@
     ],
     "autoload": {
             "psr-4": {
-                "JStormes\\LdapConnector\\": "src/"
+                "JStormes\\Ldap\\": "src/"
             }
         },
         "autoload-dev": {
             "psr-4": {
-                "JStormes\\LdapConnector\\Test\\": "test/src/"
+                "JStormes\\Ldap\\Test\\": "test/src/"
         }
     }
 }
