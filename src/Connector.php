@@ -90,7 +90,7 @@ class Connector
      */
     private function attemptLdapConnect($username, $password)
     {
-        $servers = $this->dnsLookup($this->server, DNS_A);
+        $servers = dns_get_record($this->server, DNS_A);
 
         foreach($servers as $dnsEntry) {
 
@@ -101,7 +101,7 @@ class Connector
                 ldap_set_option($ldapResource, LDAP_OPT_TIMELIMIT, $this->connectionTimeoutInSeconds);
                 ldap_set_option($ldapResource, LDAP_OPT_NETWORK_TIMEOUT, $this->connectionTimeoutInSeconds);
 
-                if (!isEmpty($this->publicCertificatePath)) {
+                if (!empty($this->publicCertificatePath)) {
                     ldap_set_option($ldapResource, LDAP_OPT_X_TLS_CERTFILE, $this->publicCertificatePath);
                 }
                 ldap_start_tls($ldapResource);
