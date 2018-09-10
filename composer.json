@@ -1,5 +1,5 @@
 {
-    "name": "dri/ldap-connector",
+    "name": "jstormes/ldap",
     "description": "ldap connector",
     "license": "MIT",
     "config": {
