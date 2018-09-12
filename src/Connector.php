@@ -111,7 +111,10 @@ class Connector
                     return $this->isConnected();
                 }
                 else {
-                    $this->logger->error(ldap_error($ldapResource));
+                    $error = ldap_error($ldapResource);
+                    $this->logger->error($error);
+
+                    if ($error == 'Invalid credentials') return $this->isConnected();
                 }
             }
             catch (\Exception $ex) {
