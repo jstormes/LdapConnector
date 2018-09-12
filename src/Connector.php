@@ -108,6 +108,7 @@ class Connector
 
                 if (@ldap_bind($ldapResource, $username, $password)) {
                     $this->ldapResources[] = $ldapResource;
+                    return $this->isConnected();
                 }
                 else {
                     $this->logger->error(ldap_error($ldapResource));
@@ -130,6 +131,73 @@ class Connector
             return true;
         }
         return false;
+    }
+
+    /**
+     * see: http://www.kouti.com/tables/userattributes.htm
+     *
+     * @param $baseLdapDomainNames
+     * @param $where
+     * @param $attributes
+     * @return array
+     * @throws \Exception
+     */
+    public function ldapSearch($baseLdapDomainNames, $where, $attributes)
+    {
+        if (!$this->isConnected()) {
+            throw new \Exception("No LDAP connection.");
+        }
+
+        /** @noinspection PhpParamsInspection */
+        $sr = ldap_search($this->ldapResources, $baseLdapDomainNames, $where, $attributes);
+
+        $results = [];
+
+        for($i=0;$i<count($sr);$i++) {
+            $entries = ldap_get_entries($this->ldapResources[$i], $sr[$i]);
+            $results = array_merge($results,$entries);
+        }
+        return $results;
+    }
+
+    public function ldapUnroll($entries) {
+        $entry = $entries[0];
+
+        $user = new \StdClass();
+        $user->account = $usr;
+        $user->domain = $domain;
+        $user->name = $entry['name'][0];
+        $user->mail = $entry['mail'][0];
+
+        if (isset($entry['memberof'])) {
+            array_shift($entry['memberof']);
+            $user->groups = array_map(function ($x) {
+                return $x;
+            }, $entry['memberof']);
+        }
+
+        return $user;
+    }
+
+
+    public function ldapUnroll2($entires){
+
+        $results=[];
+        foreach($entires as $key=>$value) {
+
+            if (is_int($key)) {
+                if (is_array($value)) {
+                    $results[$key] =$this->ldapUnroll($value);
+                }
+            }
+            else {
+                if (is_array($value)) {
+                    $results[$key] =$this->ldapUnroll($value);
+                }
+            }
+
+        }
+
     }
 
 
