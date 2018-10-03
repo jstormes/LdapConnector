@@ -13,11 +13,10 @@ trait ldapMockAD
 {
     private $isConnected = false;
 
-    function ldapConnect(string $server, string $username, string $password) : bool
+    function ldapConnect(string $username, string $password) : bool
     {
         if ($username == "testUser" &&
-            $password == "testPass" &&
-            $server == "testServer")
+            $password == "testPass")
         {
             $this->isConnected=true;
             return $this->isConnected;

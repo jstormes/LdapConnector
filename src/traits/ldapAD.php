@@ -50,15 +50,21 @@ trait ldapAD
 
     }
 
-    function ldapSearchForUserDetails() : array
+    function ldapSearchForUserDetails(string $baseDN, string$username) : array
     {
         if (!$this->isConnected()) {
             throw new \Exception('Not connected');
         }
 
         /** @noinspection PhpParamsInspection */
-        $sr = ldap_search($this->ldapResources, $baseLdapDomainNames, $where, $attributes);
+        $results = ldap_search($this->ldapResources, $baseDN, "(samaccountname=$username)", ["name", "mail", "memberof"]);
+        if (!$results) {
+            throw new \Exception("Unable to query LDAP server.");
+        }
 
+        $entries = ldap_get_entries($this->ldapResources, $results);
+
+        return $entries;
     }
 
     /**
