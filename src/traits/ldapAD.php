@@ -31,7 +31,7 @@ trait ldapAD
         }
         ldap_start_tls($ldapResource);
 
-        if (@ldap_bind($ldapResource, $username, $password)) {
+        if (@ldap_bind($ldapResource, $this->config['Domain'].'\\'.$username, $password)) {
             $this->ldapResources[] = $ldapResource;
 
             return $this->isConnected();
@@ -50,7 +50,7 @@ trait ldapAD
 
     }
 
-    function ldapSearchForUserDetails(string $baseDN, string$username) : array
+    function ldapSearchForUserDetails(string $baseDN, string $username) : array
     {
         if (!$this->isConnected()) {
             throw new \Exception('Not connected');

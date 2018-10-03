@@ -6,6 +6,8 @@
  * Time: 11:40 AM
  */
 
+declare(strict_types=1);
+
 namespace JStormes\Ldap;
 
 use Psr\Log\LoggerInterface;
