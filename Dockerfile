@@ -33,5 +33,26 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini
 ENV PHP_IDE_CONFIG="serverName=ldap_test"
 
+#############################################################################
+# Setup OpenLDAP server
+#############################################################################
+ADD assets/ssl/certs/ /etc/ssl/certs/
+ADD assets/ssl/private/ /etc/ssl/private/
+ADD assets/ldap/debconfig-set-selections.txt /etc/ldap
+RUN cat /etc/ldap/debconfig-set-selections.txt | debconf-set-selections \
+    && rm /etc/ldap/debconfig-set-selections.txt \
+    && apt-get install -y slapd ldap-utils ldapscripts syslog-ng-core gettext \
+    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
+# LDAP Config
+ADD assets/ldap/ldif /etc/ldap/ldif
+ADD assets/ldap/ldap.conf /etc/ldap/
+RUN usermod -aG ssl-cert openldap \
+    && /bin/bash -c "service slapd start" \
+    && sleep 5 \
+    && ldapmodify -H ldapi:// -Y EXTERNAL -f /etc/ldap/ldif/ssl.ldif \
+    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/us_cn.ldif \
+    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/test_group.ldif \
+    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/test.u_user.ldif
+
 WORKDIR /opt/project
-#ENTRYPOINT /opt/vendor/bin/phpunit
+

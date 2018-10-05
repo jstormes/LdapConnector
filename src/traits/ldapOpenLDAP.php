@@ -59,16 +59,17 @@ trait ldapOpenLDAP
         }
 
         /** @noinspection PhpParamsInspection */
-        $results = ldap_search($this->ldapResources, $baseDN, "(samaccountname=$username)", ["name", "mail", "memberof"]);
+        $results = ldap_search($this->ldapResources, $baseDN, "(cn=$username)",['givenname', 'sn']);
         if (!$results) {
             throw new \Exception("Unable to query LDAP server.");
         }
 
-        $entries = ldap_get_entries($this->ldapResources, $results);
+        // TODO: Iterate over resources and results.
+        $entries = ldap_get_entries($this->ldapResources[0], $results[0]);
 
         // Get OpenLDAP Groups
         $results2 = ldap_search($this->ldapResources, $baseDN, "(&(cn=*)(memberUid=${username}))",['cn']);
-        $groups = ldap_get_entries($this->ldapResources, $results2);
+        $groups = ldap_get_entries($this->ldapResources[0], $results2[0]);
 
         $entries['groups']=$groups;
 
