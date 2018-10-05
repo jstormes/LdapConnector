@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  test:
+    build: .
+    environment:
+        XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_autostart=1
+    volumes:
+      - ./:/opt/

@@ -20,4 +20,5 @@ interface ConnectorInterface
     public function connect(string $username, string $password) : bool;
 
     public function getUserInfo() : array ;
+
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<phpunit bootstrap="vendor/autoload.php" colors="false">
     <php>
         <env name="APPLICATION_ENV" value="local"/>
         <ini name="date.timezone" value="America/Los_Angeles" />

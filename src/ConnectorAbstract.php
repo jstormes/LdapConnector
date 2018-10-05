@@ -15,20 +15,48 @@ use Psr\Log\LoggerInterface;
 abstract class ConnectorAbstract implements ConnectorInterface
 {
     /** @var array|void  */
-    private $config = [];
+    protected $config = [];
 
-    /** @var LoggerInterface\ */
-    private $logger;
+    /** @var LoggerInterface */
+    protected $logger;
 
     /** @var string */
     private $username;
 
+    /**
+     * Stub for trait provided function
+     * @param string $server
+     * @param string $username
+     * @param string $password
+     * @return bool
+     */
+    abstract protected function ldapConnect(string $server, string $username, string $password) : bool;
+
+    /**
+     * Stub for trait provided function
+     * @param string $baseDN
+     * @param string $username
+     * @return array
+     */
+    abstract protected function ldapSearchForUserDetails(string $baseDN, string $username) : array;
+
+    /**
+     * ConnectorAbstract constructor.
+     * @param string $server
+     * @param LoggerInterface $logger
+     * @throws \Exception
+     */
     public function __construct(string $server, LoggerInterface $logger)
     {
         $this->config = $this->parseServer($server);
         $this->logger = $logger;
     }
 
+    /**
+     * @param string $username
+     * @param string $password
+     * @return bool
+     */
     public function connect(string $username, string $password): bool
     {
         $isConnected = $this->ldapConnect($this->config['DnsName'], $username, $password);
@@ -39,6 +67,9 @@ abstract class ConnectorAbstract implements ConnectorInterface
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getUserInfo(): array
     {
         $rawUserDetails = $this->ldapSearchForUserDetails($this->config['LdapBaseDN'], $this->username);
@@ -83,7 +114,7 @@ abstract class ConnectorAbstract implements ConnectorInterface
     }
 
     /**
-     * Parse both AD and OpenLDAP user searches into a common array.
+     * Parse both AD and OpenLDAP user searches into a common array format.
      *
      * @param $userInfo
      * @return array
@@ -116,7 +147,8 @@ abstract class ConnectorAbstract implements ConnectorInterface
     }
 
     /**
-     * Parse: "CN=bamboo-user,OU=Bamboo,OU=Security,OU=Groups,DC=us,DC=loopback,DC=world"
+     * Parse: "CN=bamboo-user,OU=Bamboo,OU=Security,OU=Groups,DC=us,DC=loopback,DC=world" or
+     * "cn=bamboo-user,dc=us,dc=loopback,dc=world"
      * Into: "bamboo-user"
      *
      * @param $LDAPGroup
@@ -139,18 +171,19 @@ abstract class ConnectorAbstract implements ConnectorInterface
     /**
      * For testing
      *
-     * @return array|void
+     * @return array
      */
-    public function getConfig() {
+    public function getConfig() : array {
         return $this->config;
     }
 
     /**
      * For testing
      *
-     * @return LoggerInterface|LoggerInterface\
+     * @return LoggerInterface
      */
     public function getLogger() {
         return $this->logger;
     }
+
 }

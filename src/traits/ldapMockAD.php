@@ -13,7 +13,7 @@ trait ldapMockAD
 {
     private $isConnected = false;
 
-    function ldapConnect(string $server, string $username, string $password) : bool
+    protected function ldapConnect(string $server, string $username, string $password) : bool
     {
         if ($username == "testUser" &&
             $password == "testPass" &&
@@ -26,7 +26,7 @@ trait ldapMockAD
         return $this->isConnected;
     }
 
-    function ldapSearchForUserDetails(string $baseDN, string $username) : array
+    protected function ldapSearchForUserDetails(string $baseDN, string $username) : array
     {
         if (!$this->isConnected) {
             throw new \Exception('Not connected');

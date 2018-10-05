@@ -11,7 +11,9 @@ declare(strict_types=1);
 namespace JStormes\Ldap;
 
 
-class Connector extends ConnectorAbstract
-{
+use JStormes\Ldap\traits\ldapMockOpenLDAP;
 
+class ConnectorOpenLdapMock extends ConnectorAbstract
+{
+    use ldapMockOpenLDAP;
 }
