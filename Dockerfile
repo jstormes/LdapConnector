@@ -33,5 +33,5 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini
 ENV PHP_IDE_CONFIG="serverName=ldap_test"
 
-WORKDIR /opt
-ENTRYPOINT /opt/vendor/bin/phpunit
+WORKDIR /opt/project
+#ENTRYPOINT /opt/vendor/bin/phpunit

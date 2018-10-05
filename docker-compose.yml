@@ -6,4 +6,11 @@ services:
     environment:
         XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_autostart=1
     volumes:
-      - ./:/opt/
+      - ./:/opt/project/
+  install:
+    build: .
+    entrypoint: /root/bin/composer update
+    environment:
+      XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_autostart=1
+    volumes:
+    - ./:/opt/project/
