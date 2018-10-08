@@ -9,7 +9,7 @@
 namespace JStormes\Ldap\traits;
 
 
-trait ldapOpenLDAP
+trait ldap
 {
 
     /** @var array  */
@@ -18,7 +18,7 @@ trait ldapOpenLDAP
     /** @var int  */
     private $connectionTimeoutInSeconds = 8;
 
-    function ldapConnect(string $server, string $username, string $password) : bool
+    function ldapConnect(string $server, string $rdn, string $password) : bool
     {
         $ldapResource = ldap_connect($server);
         ldap_set_option($ldapResource, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -31,8 +31,6 @@ trait ldapOpenLDAP
         }
         ldap_start_tls($ldapResource);
 
-        //"CN=${usr},".$baseDN
-        $rdn = "CN=${username},".$this->config['LdapBaseDN'];
         if (@ldap_bind($ldapResource, $rdn, $password)) {
             $this->ldapResources[] = $ldapResource;
 
@@ -52,26 +50,19 @@ trait ldapOpenLDAP
 
     }
 
-    function ldapSearchForUserDetails(string $baseDN, string $username) : array
+    function ldapSearch(string $baseDN, string $filter, array $attributes) : array
     {
         if (!$this->isConnected()) {
             throw new \Exception('Not connected');
         }
 
         /** @noinspection PhpParamsInspection */
-        $results = ldap_search($this->ldapResources, $baseDN, "(cn=$username)",['givenname', 'sn', 'Email']);
+        $results = ldap_search($this->ldapResources, $baseDN, $filter, $attributes);
         if (!$results) {
             throw new \Exception("Unable to query LDAP server.");
         }
 
-        // TODO: Iterate over resources and results.
-        $entries = ldap_get_entries($this->ldapResources[0], $results[0]);
-
-        // Get OpenLDAP Groups
-        $results2 = ldap_search($this->ldapResources, $baseDN, "(&(cn=*)(memberUid=${username}))",['cn']);
-        $groups = ldap_get_entries($this->ldapResources[0], $results2[0]);
-
-        $entries['groups']=$groups;
+        $entries = ldap_get_entries($this->ldapResources, $results);
 
         return $entries;
     }
