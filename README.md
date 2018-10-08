@@ -12,6 +12,7 @@ This package also forces TLS only connections to both LDAP and AD, allowing the 
 via a file path.  In today's insecure world, this package requires a TLS connection to the LDAP server.
 
 ## CLI Testing Quick Start 
+`docker-compose run install`
 `docker-compose run test`
 
 ## PHPStorm Testing Quick Start

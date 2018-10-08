@@ -2,27 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c6ef8a43-8ccd-4820-91ca-c4ab12efbc9f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Connector/Connector.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Connector/ConnectorAbstract.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Connector/ConnectorInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Connector/trait/ldap.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Entity/UserEntity.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Entity/UserEntityInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/MockConnectors/MockAdConnector.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/MockConnectors/MockOpenLdapConnector.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/MockConnectors/trait/ldapAdMock.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/MockConnectors/trait/ldapOpenLdapMock.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/SchemaAdapter/SchemaAdapterAD.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/SchemaAdapter/SchemaAdapterAbstract.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/SchemaAdapter/SchemaAdapterInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/SchemaAdapter/SchemaAdapterOpenLDAP.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/ConnectToAdLdapUnitTest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/ConnectToOpenLdapUnitTest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/OpenLdapLoopbackTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/traits/ldapOpenLDAP.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/traits/ldapOpenLDAP.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/IntegrationTest.php" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,35 +28,35 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="Dockerfile" value="2" />
+          <entry key="Dockerfile" value="3" />
           <entry key="dist" value="2" />
           <entry key="gitattributes" value="1" />
           <entry key="gitignore" value="1" />
           <entry key="ldif" value="3" />
-          <entry key="md" value="3" />
+          <entry key="md" value="4" />
           <entry key="pem" value="1" />
-          <entry key="php" value="87" />
+          <entry key="php" value="89" />
           <entry key="phpunit" value="1" />
           <entry key="sh" value="1" />
-          <entry key="yml" value="2" />
+          <entry key="yml" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Bash" value="1" />
-          <entry key="Dockerfile" value="2" />
-          <entry key="Markdown" value="3" />
-          <entry key="PHP" value="88" />
+          <entry key="Dockerfile" value="3" />
+          <entry key="Markdown" value="4" />
+          <entry key="PHP" value="90" />
           <entry key="PLAIN_TEXT" value="6" />
           <entry key="XML" value="2" />
-          <entry key="YAML" value="2" />
+          <entry key="YAML" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Dockerfile" value="12" />
           <entry key="dummy" value="74" />
-          <entry key="md" value="165" />
+          <entry key="md" value="233" />
           <entry key="php" value="3905" />
           <entry key="sh" value="10" />
           <entry key="yml" value="120" />
@@ -85,7 +66,7 @@
         <counts>
           <entry key="Bash" value="10" />
           <entry key="Dockerfile" value="12" />
-          <entry key="Markdown" value="165" />
+          <entry key="Markdown" value="233" />
           <entry key="PHP" value="3905" />
           <entry key="PLAIN_TEXT" value="74" />
           <entry key="YAML" value="120" />
@@ -107,12 +88,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Connector/ConnectorAbstract.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="476">
+              <caret line="33" column="45" lean-forward="true" selection-start-line="33" selection-start-column="45" selection-end-line="33" selection-end-column="45" />
+              <folding>
+                <element signature="e#129#165#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="765">
-                <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
+              <first_editor relative-caret-position="238">
+                <caret line="14" column="27" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="27" />
               </first_editor>
               <second_editor />
             </state>
@@ -120,13 +122,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Connector/ConnectorInterface.php">
+        <entry file="file://$PROJECT_DIR$/Dockerfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="22" column="1" lean-forward="true" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
-              <folding>
-                <element signature="e#129#165#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="833">
+              <caret line="49" column="41" selection-start-line="49" selection-start-column="7" selection-end-line="49" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -388,7 +387,7 @@
       <updated>1538752984815</updated>
       <workItem from="1538752986764" duration="2247000" />
       <workItem from="1538755274249" duration="2388000" />
-      <workItem from="1538757726475" duration="24280000" />
+      <workItem from="1538757726475" duration="25874000" />
     </task>
     <servers />
   </component>
@@ -425,7 +424,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28915000" />
+    <option name="totallyTimeSpent" value="30509000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="2062" height="1126" extended-state="6" />
@@ -497,13 +496,6 @@
     <entry file="file://$PROJECT_DIR$/assets/ssl/certs/loopback.world.cert.pem">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/.gitattributes">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -511,13 +503,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Dockerfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="404">
-          <caret line="49" column="41" selection-start-line="49" selection-start-column="7" selection-end-line="49" selection-end-column="41" />
         </state>
       </provider>
     </entry>
@@ -649,13 +634,6 @@
     <entry file="file://$PROJECT_DIR$/test/ConnectToOpenLdapUnitTest.php">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Connector/Connector.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="15" column="13" lean-forward="true" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/MockConnectors/MockOpenLdapConnector.php">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -670,16 +648,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
           <caret line="35" column="29" lean-forward="true" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Connector/ConnectorAbstract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="33" column="45" lean-forward="true" selection-start-line="33" selection-start-column="45" selection-end-line="33" selection-end-column="45" />
-          <folding>
-            <element signature="e#129#165#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -710,6 +678,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Connector/Connector.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="15" column="13" lean-forward="true" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Connector/ConnectorInterface.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
@@ -720,11 +695,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Connector/ConnectorAbstract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="33" column="45" lean-forward="true" selection-start-line="33" selection-start-column="45" selection-end-line="33" selection-end-column="45" />
+          <folding>
+            <element signature="e#129#165#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="833">
+          <caret line="49" column="41" selection-start-line="49" selection-start-column="7" selection-end-line="49" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="765">
-            <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
+          <first_editor relative-caret-position="238">
+            <caret line="14" column="27" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="27" />
           </first_editor>
           <second_editor />
         </state>
