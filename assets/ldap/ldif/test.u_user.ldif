@@ -9,17 +9,18 @@
 
 version: 1
 
-# Entry 1: cn=test.u,dc=us,dc=loopback,dc=world
-dn: cn=test.u,dc=us,dc=loopback,dc=world
-cn: test.u
+# Entry 1: cn=testUser,dc=us,dc=loopback,dc=world
+dn: cn=testUser,dc=us,dc=loopback,dc=world
+cn: testUser
 gidnumber: 500
-givenname: test
+givenname: Test
 homedirectory: /home/users/test.u
 loginshell: /usr/sbin/nologin
+mail: Test.u@loopback.world
 objectclass: inetOrgPerson
 objectclass: posixAccount
 objectclass: top
-sn: user
-uid: test.u
+sn: User
+uid: testUser
 uidnumber: 1000
 userpassword: {SSHA}aaP2BKwAu7CtWJn/M1iM/zlR78S6CI8I

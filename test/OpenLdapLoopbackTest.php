@@ -9,7 +9,10 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use JStormes\Ldap\ConnectorOpenLdap as Connector;
+use JStormes\Ldap\Connector\Connector;
+use JStormes\Ldap\LdapAdapter\LdapAdapter;
+use JStormes\Ldap\SchemaAdapter\SchemaAdapterOpenLDAP;
+use Psr\Log\NullLogger;
 
 
 
@@ -29,24 +32,31 @@ class OpenLdapLoopbackTest extends TestCase
 
     }
 
-//    public function test__connect()
-//    {
-//        $server = "LOOPBACK:us.loopback.world:DC=us,DC=loopback,DC=world";
-//        $logger = new Psr\Log\NullLogger();
-//        $connector = new Connector($server, $logger);
-//
-//        $isConnected = $connector->connect('test.u', 'test');
-//
-//        $this->assertEquals(true, $isConnected);
-//
-//        $userInfo = $connector->getUserInfo();
-//
-//        $this->assertEquals('Test User', $userInfo['name']);
-//        $this->assertEquals('Test.u@loopback.world', $userInfo['mail']);
-//        $this->assertContains('bamboo-user', $userInfo['groups']);
-//        $this->assertContains('DL-ARL-Development', $userInfo['groups']);
-//        $this->assertContains('US-VPN-Users', $userInfo['groups']);
-//        $this->assertContains('Arlington-Development', $userInfo['groups']);
-//        $this->assertContains('US-Development', $userInfo['groups']);
-//    }
+    public function test__connect()
+    {
+        $serverString = "LOOPBACK:us.loopback.world:DC=us,DC=loopback,DC=world";
+
+        $ldapAdapter = new LdapAdapter();
+        $schemaAdapter = new SchemaAdapterOpenLDAP($serverString);
+        $logger = new NullLogger();
+
+        $connector = new Connector($ldapAdapter, $schemaAdapter, $logger);
+
+        $isConnected = $connector->connect('testUser', 'test');
+
+        $this->assertEquals(true, $isConnected);
+
+        $user = $connector->getUserEntity();
+        
+        $this->assertInstanceOf('JStormes\Ldap\Entity\UserEntity', $user);
+
+        $this->assertEquals('testUser', $user->getUserName());
+        $this->assertEquals('Test User', $user->getDisplayName());
+        $this->assertEquals('Test.u@loopback.world', $user->getEmailAddress());
+        $this->assertContains('bamboo-user', $user->getUserGroups());
+        $this->assertContains('DL-ARL-Development', $user->getUserGroups());
+        $this->assertContains('US-VPN-Users', $user->getUserGroups());
+        $this->assertContains('Arlington-Development', $user->getUserGroups());
+        $this->assertContains('US-Development', $user->getUserGroups());
+    }
 }

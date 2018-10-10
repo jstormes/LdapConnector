@@ -9,20 +9,27 @@
 namespace JStormes\Ldap\Connector;
 
 use JStormes\Ldap\Entity\UserEntity;
+use JStormes\Ldap\LdapAdapter\LdapAdapterInterface;
 use JStormes\Ldap\SchemaAdapter\SchemaAdapterInterface;
 use Psr\Log\LoggerInterface;
 
 
 abstract class ConnectorAbstract implements ConnectorInterface
 {
+    /** @var LdapAdapterInterface  */
+    protected $LdapAdapter;
+
     /** @var SchemaAdapterInterface  */
     protected $SchemaAdapter;
 
     /** @var LoggerInterface  */
     protected $Log;
 
-    public function __construct(SchemaAdapterInterface $schemaAdapter, LoggerInterface $log)
+    public function __construct(LdapAdapterInterface $adapter,
+                                SchemaAdapterInterface $schemaAdapter,
+                                LoggerInterface $log)
     {
+        $this->LdapAdapter = $adapter;
         $this->SchemaAdapter = $schemaAdapter;
         $this->Log = $log;
     }
@@ -31,20 +38,17 @@ abstract class ConnectorAbstract implements ConnectorInterface
     {
         $rdn = $this->SchemaAdapter->getRdn($username);
         $server = $this->SchemaAdapter->getServer();
-        return $this->ldapConnect($server, $rdn, $password);
+        return $this->LdapAdapter->ldapConnect($server, $rdn, $password);
     }
 
     public function getUserEntity(): UserEntity
     {
         $userEntity = new UserEntity();
 
-        $results = $this->SchemaAdapter->getUserDetails($this);
+        $results = $this->SchemaAdapter->getUserDetails($this->LdapAdapter);
         $this->SchemaAdapter->hydrateUserEntity($userEntity, $results);
 
         return $userEntity;
     }
 
-    abstract function ldapConnect(string $server, string $username, string $password): bool;
-
-    abstract function ldapSearch(string $baseDN, string $filter, array $attributes): array;
 }

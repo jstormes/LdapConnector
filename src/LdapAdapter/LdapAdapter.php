@@ -6,10 +6,10 @@
  * Time: 1:32 PM
  */
 
-namespace JStormes\Ldap\traits;
+namespace JStormes\Ldap\LdapAdapter;
 
 
-trait ldap
+class LdapAdapter extends LdapAdapterAbstract
 {
 
     /** @var array  */
@@ -38,7 +38,6 @@ trait ldap
         }
 
         $error = ldap_error($ldapResource);
-        $this->logger->error($error);
 
         if ($error == 'Invalid credentials') return $this->isConnected();
 
@@ -62,7 +61,7 @@ trait ldap
             throw new \Exception("Unable to query LDAP server.");
         }
 
-        $entries = ldap_get_entries($this->ldapResources, $results);
+        $entries = ldap_get_entries($this->ldapResources[0], $results[0]);
 
         return $entries;
     }

@@ -6,12 +6,12 @@
  * Time: 2:31 PM
  */
 
-namespace JStormes\Ldap\Connector;
+namespace JStormes\Ldap\MockConnector;
 
 
 use JStormes\Ldap\traits\ldapAdMock;
 
-class MockAdConnector extends ConnectorAbstract
+class MockOpenLdapConnector extends ConnectorAbstract
 {
     use ldapAdMock;
 

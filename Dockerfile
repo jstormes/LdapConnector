@@ -52,7 +52,12 @@ RUN usermod -aG ssl-cert openldap \
     && ldapmodify -H ldapi:// -Y EXTERNAL -f /etc/ldap/ldif/ssl.ldif \
     && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/us_cn.ldif \
     && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/test_group.ldif \
-    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/test.u_user.ldif
+    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/test.u_user.ldif \
+    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/bamboo-user.ldif \
+    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/Arlington-Development.ldif \
+    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/DL-ARL-Development.ldif \
+    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/US-Development.ldif \
+    && ldapadd -H ldapi:// -x -w naked  -D "cn=admin,dc=loopback,dc=world" -f /etc/ldap/ldif/US-VPN-Users.ldif
 
 WORKDIR /opt/project
 

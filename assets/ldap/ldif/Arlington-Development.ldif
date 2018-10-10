@@ -1,0 +1,6 @@
+dn: cn=Arlington-Development,dc=us,dc=loopback,dc=world
+cn: Arlington-Development
+gidnumber: 502
+memberuid: testUser
+objectclass: posixGroup
+objectclass: top

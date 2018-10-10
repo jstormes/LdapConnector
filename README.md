@@ -12,8 +12,11 @@ This package also forces TLS only connections to both LDAP and AD, allowing the 
 via a file path.  In today's insecure world, this package requires a TLS connection to the LDAP server.
 
 ## CLI Testing Quick Start 
-`docker-compose run install`
-`docker-compose run test`
+
+Make sure you have Docker and Docker Compose installed.
+
+* `docker-compose run composer install`
+* `docker-compose run phpunit`
 
 ## PHPStorm Testing Quick Start
 
@@ -22,7 +25,7 @@ via a file path.  In today's insecure world, this package requires a TLS connect
     * Docker Compose
     * Server: Docker
     * Configuration file(s):  .\docker-compose.yml
-    * Service: test
+    * Service: phpunit
 
 * File->Settings->Languages & Frameworks->PHP->Test Frameworks
   * \+ PHPUnit by Remote Interpreter 

@@ -1,0 +1,6 @@
+dn: cn=US-Development,dc=us,dc=loopback,dc=world
+cn: US-Development
+gidnumber: 504
+memberuid: testUser
+objectclass: posixGroup
+objectclass: top

@@ -1,0 +1,6 @@
+dn: cn=DL-ARL-Development,dc=us,dc=loopback,dc=world
+cn: DL-ARL-Development
+gidnumber: 503
+memberuid: testUser
+objectclass: posixGroup
+objectclass: top

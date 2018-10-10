@@ -9,8 +9,8 @@
 namespace JStormes\Ldap\SchemaAdapter;
 
 
-use JStormes\Ldap\Connector\ConnectorInterface;
 use JStormes\Ldap\Entity\UserEntity;
+use JStormes\Ldap\LdapAdapter\LdapAdapterInterface;
 
 abstract class SchemaAdapterAbstract implements SchemaAdapterInterface
 {
@@ -43,14 +43,14 @@ abstract class SchemaAdapterAbstract implements SchemaAdapterInterface
      * @param $username
      * @return mixed
      */
-    abstract public function getRdn($username);
+    abstract public function getRdn(string $username);
 
     /**
      * @inheritdoc
-     * @param ConnectorInterface $connector
+     * @param LdapAdapterInterface $connector
      * @return mixed
      */
-    abstract function getUserDetails(ConnectorInterface $connector);
+    abstract function getUserDetails(LdapAdapterInterface $connector);
 
     /**
      * @inheritdoc
@@ -96,6 +96,28 @@ abstract class SchemaAdapterAbstract implements SchemaAdapterInterface
         if (isset($part[4])) $config['CertificatePath']=$part[4];
 
         return $config;
+    }
+
+    /**
+     * Parse: "CN=bamboo-user,OU=Bamboo,OU=Security,OU=Groups,DC=us,DC=loopback,DC=world" or
+     * "cn=bamboo-user,dc=us,dc=loopback,dc=world"
+     * Into: "bamboo-user"
+     *
+     * @param $LDAPGroup
+     * @return null
+     */
+    protected function parseSingleGroup($LDAPGroup)
+    {
+        $group=null;
+        $ldapParts = explode(',',$LDAPGroup);
+        if (isset($ldapParts[0])) {
+            $groupParts = explode('=',$ldapParts[0]);
+            if (isset($groupParts[1])) {
+                $group = $groupParts[1];
+            }
+        }
+
+        return $group;
     }
 
 }

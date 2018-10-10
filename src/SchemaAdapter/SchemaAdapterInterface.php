@@ -9,8 +9,8 @@
 namespace JStormes\Ldap\SchemaAdapter;
 
 
-use JStormes\Ldap\Connector\ConnectorInterface;
 use JStormes\Ldap\Entity\UserEntity;
+use JStormes\Ldap\LdapAdapter\LdapAdapterInterface;
 
 interface SchemaAdapterInterface
 {
@@ -29,15 +29,15 @@ interface SchemaAdapterInterface
      * @param $username
      * @return mixed
      */
-    public function getRdn($username);
+    public function getRdn(string $username);
 
     /**
      * Get the Raw user details from the LDAP server.
      *
-     * @param ConnectorInterface $connector
+     * @param LdapAdapterInterface $connector
      * @return mixed
      */
-    public function getUserDetails(ConnectorInterface $connector);
+    public function getUserDetails(LdapAdapterInterface $connector);
 
     /**
      * Hydrate the Raw user details into a UserEntity.

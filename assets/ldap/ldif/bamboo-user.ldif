@@ -1,0 +1,6 @@
+dn: cn=bamboo-user,dc=us,dc=loopback,dc=world
+cn: bamboo-user
+gidnumber: 501
+memberuid: testUser
+objectclass: posixGroup
+objectclass: top

@@ -1,0 +1,6 @@
+dn: cn=US-VPN-Users,dc=us,dc=loopback,dc=world
+cn: US-VPN-Users
+gidnumber: 505
+memberuid: testUser
+objectclass: posixGroup
+objectclass: top

@@ -6,16 +6,17 @@
  * Time: 1:32 PM
  */
 
-namespace JStormes\Ldap\traits;
+namespace JStormes\Ldap\LdapAdapter;
 
 
-trait ldapAdMock
+class LdapAdMockAdapter extends LdapAdapterAbstract
 {
     private $isConnected = false;
 
-    protected function ldapConnect(string $server, string $username, string $password) : bool
+    function ldapConnect(string $server, string $username, string $password) : bool
     {
-        if ($username == "testUser" &&
+        
+        if ($username == "LOOPBACK\\testUser" &&
             $password == "testPass" &&
             $server == "us.loopback.world")
         {
@@ -26,13 +27,13 @@ trait ldapAdMock
         return $this->isConnected;
     }
 
-    protected function ldapSearch(string $baseDN, string $filter, array $attributes) : array
+    function ldapSearch(string $baseDN, string $filter, array $attributes) : array
     {
         if (!$this->isConnected) {
             throw new \Exception('Not connected');
         }
 
-        if ($username == "testUser" &&
+        if ($filter == "(samaccountname=testUser)" &&
             $baseDN == "DC=us,DC=loopback,DC=world")
         {
             return array (

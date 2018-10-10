@@ -9,12 +9,13 @@
 namespace JStormes\Ldap\Connector;
 
 use JStormes\Ldap\Entity\UserEntity;
+use JStormes\Ldap\LdapAdapter\LdapAdapterInterface;
 use JStormes\Ldap\SchemaAdapter\SchemaAdapterInterface;
 use Psr\Log\LoggerInterface;
 
 interface ConnectorInterface
 {
-    public function __construct(SchemaAdapterInterface $schemaType, LoggerInterface $logger);
+    public function __construct(LdapAdapterInterface $adapter, SchemaAdapterInterface $schemaType, LoggerInterface $logger);
 
     public function connect(string $username, string $password) : bool;
 

@@ -13,6 +13,5 @@ use JStormes\Ldap\traits\ldap;
 
 class Connector extends ConnectorAbstract
 {
-    use ldap;
 
 }

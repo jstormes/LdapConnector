@@ -34,7 +34,7 @@ class UserEntity implements UserEntityInterface
         return $this;
     }
 
-    public function getDisplayName(): string
+    public function getDisplayName(): string 
     {
         return $this->DisplayName;
     }

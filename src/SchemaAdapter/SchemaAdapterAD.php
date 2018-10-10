@@ -9,24 +9,58 @@
 namespace JStormes\Ldap\SchemaAdapter;
 
 
-use JStormes\Ldap\Connector\ConnectorInterface;
 use JStormes\Ldap\Entity\UserEntity;
+use JStormes\Ldap\LdapAdapter\LdapAdapterInterface;
 
 class SchemaAdapterAD extends SchemaAdapterAbstract
 {
-    public function getRdn($username)
+    /** @var string */
+    private $userName;
+    
+    public function getRdn(string $userName)
     {
-        return $this->config['Domain'].'\\'.$username;
+        $this->userName = $userName;
+        return $this->config['Domain'].'\\'.$userName;
     }
 
-    function getUserDetails(ConnectorInterface $connector)
+    function getUserDetails(LdapAdapterInterface $connector)
     {
-        // TODO: Implement getUserDetails() method.
+        $baseDN = $this->config['LdapBaseDN'];
+        $userName = $this->userName;
+        
+        $results = $connector->ldapSearch($baseDN,"(samaccountname=${userName})", ["name", "mail", "memberof"]);
+
+        return $results;
     }
 
     function hydrateUserEntity(UserEntity $userEntity, array $results)
     {
-        // TODO: Implement hydrateUserEntity() method.
+        $userEntity->setUserName($this->userName);
+        
+        if (count($results)>0) {
+            // Parse AD name
+            if (isset($results[0]['name'][0])) {
+                $userEntity->setDisplayName($results[0]['name'][0]);
+            }
+
+            // Parse AD Email
+            if (isset($results[0]['mail'][0])) {
+                $userEntity->setEmailAddress($results[0]['mail'][0]);
+            }
+
+            $groups = [];
+            // Parse AD Groups
+            if (isset($results[0]['memberof'][0])) {
+                array_shift($results[0]['memberof']);
+                $groups = array_map(function ($x) {
+                    return $this->parseSingleGroup($x);
+                }, $results[0]['memberof']);
+            }
+
+            $userEntity->setUserGroups($groups);
+        }
     }
+
+    
 
 }
