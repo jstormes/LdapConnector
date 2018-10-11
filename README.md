@@ -39,23 +39,30 @@ Make sure you have Docker and Docker Compose installed.
     * Name Docker PHPUnit
     * Defined in configuration file
 
-## Structure
+## Usage Example
 
-### Adaptors
+```php
 
-Each Schema type “AD” or “OpenLDAP” has an adapter.  These Schema Adaptors implement the custom rules to connect and 
-pull the user information needed to populate the User Entity.  If a new adapter is needed, the hope is, that only the 
-new rules would need to be coded.  These adapters can be found in the “SchemaAdapter” directory.  One of these schema 
-adapters is injected into the connector’s constructor.  The Schema Adapter is also responsible for parsing the LDAP 
-connection string.
+use JStormes\Ldap\Connector\Connector;
+use JStormes\Ldap\LdapAdapter\LdapAdapter;
+use JStormes\Ldap\SchemaAdapter\SchemaAdapterOpenLDAP as SchemaAdapter;
+use Psr\Log\NullLogger;
 
-### Connector
+$serverString = "LOOPBACK:us.loopback.world:DC=us,DC=loopback,DC=world";
 
-The Connector class is where all the logic get pulls together.  Looking in the Connector class you will see very little 
-code.  This class just pulls the logic together from the base abstract class long with the ldap trait.  
+$ldapAdapter = new LdapAdapter();
+$schemaAdapter = new SchemaAdapter($serverString);
+$logger = new NullLogger();
 
-The ldap trait is used to isolate the hard to test php ldap extensions.  By replacing this trait with a mock trait, we 
-can setup an cleaner way to unit test all the other code.  The ldap trait is just a place to isolate code that is 
-difficult to unit test.
+$connector = new Connector($ldapAdapter, $schemaAdapter, $logger);
+$username = 'testUser';
+$password = 'test';
+$isConnected = $connector->connect($username, $password);
+$user = $connector->getUserEntity();
 
-The MockConnectors directory contains the Mocks to test without the ldap trait.
+$userName = $user->getUserName();
+$dispalyName = $user->getDisplayName();
+$email = $user->getEmailAddress();
+$groups = $user->getUserGroups();
+
+```
