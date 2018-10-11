@@ -20,7 +20,6 @@ class OpenLdapLoopbackTest extends TestCase
 {
     protected function setUp()
     {
-
         $connection = @fsockopen('us.loopback.world', 389);
 
         if (!is_resource($connection))
@@ -32,6 +31,9 @@ class OpenLdapLoopbackTest extends TestCase
 
     }
 
+    /**
+     * @throws Exception
+     */
     public function test__connect()
     {
         $serverString = "LOOPBACK:us.loopback.world:DC=us,DC=loopback,DC=world";
@@ -47,7 +49,7 @@ class OpenLdapLoopbackTest extends TestCase
         $this->assertEquals(true, $isConnected);
 
         $user = $connector->getUserEntity();
-        
+
         $this->assertInstanceOf('JStormes\Ldap\Entity\UserEntity', $user);
 
         $this->assertEquals('testUser', $user->getUserName());
