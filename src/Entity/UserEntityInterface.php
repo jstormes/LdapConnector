@@ -11,13 +11,13 @@ namespace JStormes\Ldap\Entity;
 
 interface UserEntityInterface
 {
-    public function getUserName() : string ;
+    public function getUserName() : ?string ;
     public function setUserName(string $userName) : UserEntityInterface;
 
-    public function getDisplayName() : string ;
+    public function getDisplayName() : ?string ;
     public function setDisplayName(string $displayName) : UserEntityInterface ;
 
-    public function getEmailAddress() : string ;
+    public function getEmailAddress() : ?string ;
     public function setEmailAddress(string $emailAddress) : UserEntityInterface;
 
     public function getUserGroups() : array ;

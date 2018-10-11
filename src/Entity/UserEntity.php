@@ -23,7 +23,7 @@ class UserEntity implements UserEntityInterface
     /** @var array */
     private $Groups;
 
-    public function getUserName(): string
+    public function getUserName(): ?string
     {
         return $this->UserName;
     }
@@ -34,7 +34,7 @@ class UserEntity implements UserEntityInterface
         return $this;
     }
 
-    public function getDisplayName(): string 
+    public function getDisplayName(): ?string
     {
         return $this->DisplayName;
     }
@@ -45,7 +45,7 @@ class UserEntity implements UserEntityInterface
         return $this;
     }
 
-    public function getEmailAddress(): string
+    public function getEmailAddress(): ?string
     {
         return $this->EmailAddress;
     }
