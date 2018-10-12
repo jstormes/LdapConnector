@@ -24,3 +24,4 @@ demos/
 extras/documentation
 log/
 .idea/
+composer.lock
