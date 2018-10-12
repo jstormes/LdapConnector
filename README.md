@@ -66,3 +66,17 @@ $email = $user->getEmailAddress();
 $groups = $user->getUserGroups();
 
 ```
+
+## Mock LdapAdapters
+
+The LdapAdapter is mostly a wrapper for code that is difficult to unit test.  To make TDD simpler, we created mock 
+versions of this hard to unit test code.
+
+Two versions of the LdapAdapter were created.  The first, `LdapAdMockAdapter.php` is for mocking a connection to a 
+Microsoft Active Directory LDAP server.  The accepted bind and the returned search results simulate a connection to 
+Microsoft AD over LDAP.  
+
+The second mock `LdapOpenLdapMockAdatper.php`, simulates a connection to a Open LDAP server.  
+
+Using both mocks it was possible to do TDD using these mocks as stand ins for a real LDAP servers.
+

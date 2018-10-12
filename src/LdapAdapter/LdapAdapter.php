@@ -18,6 +18,9 @@ class LdapAdapter extends LdapAdapterAbstract
     /** @var int  */
     private $connectionTimeoutInSeconds = 8;
 
+    /**
+     * @inheritdoc
+     */
     function ldapConnect(string $server, string $rdn, string $password) : bool
     {
         $ldapResource = ldap_connect($server);
@@ -49,6 +52,9 @@ class LdapAdapter extends LdapAdapterAbstract
 
     }
 
+    /**
+     * @inheritdoc
+     */
     function ldapSearch(string $baseDN, string $filter, array $attributes) : array
     {
         if (!$this->isConnected()) {
@@ -69,7 +75,7 @@ class LdapAdapter extends LdapAdapterAbstract
     /**
      * @return bool
      */
-    public function isConnected()
+    private function isConnected()
     {
         if (count($this->ldapResources) > 0) {
             return true;
