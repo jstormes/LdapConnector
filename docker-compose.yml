@@ -12,4 +12,9 @@ services:
     build: .
     entrypoint: /root/bin/composer
     volumes:
-    - ./:/opt/project/
+      - ./:/opt/project/
+  bash:
+    build: .
+    entrypoint: bash
+    volumes:
+      - ./:/opt/project/
