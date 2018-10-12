@@ -6,6 +6,8 @@
  * Time: 1:00 PM
  */
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 use JStormes\Ldap\LdapAdapter\LdapOpenLdapMockAdapter as LdapAdapter;
 use JStormes\Ldap\SchemaAdapter\SchemaAdapterOpenLDAP;

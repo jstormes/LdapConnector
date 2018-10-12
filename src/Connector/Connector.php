@@ -6,6 +6,8 @@
  * Time: 2:31 PM
  */
 
+declare(strict_types=1);
+
 namespace JStormes\Ldap\Connector;
 
 

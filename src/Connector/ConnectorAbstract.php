@@ -6,6 +6,8 @@
  * Time: 2:28 PM
  */
 
+declare(strict_types=1);
+
 namespace JStormes\Ldap\Connector;
 
 use JStormes\Ldap\Entity\UserEntity;

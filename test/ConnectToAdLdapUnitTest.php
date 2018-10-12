@@ -6,6 +6,8 @@
  * Time: 12:59 PM
  */
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 use JStormes\Ldap\LdapAdapter\LdapAdMockAdapter as LdapAdapter;
 use JStormes\Ldap\SchemaAdapter\SchemaAdapterAD;

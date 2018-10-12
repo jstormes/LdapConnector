@@ -6,6 +6,8 @@
  * Time: 2:57 PM
  */
 
+declare(strict_types=1);
+
 namespace JStormes\Ldap\Entity;
 
 

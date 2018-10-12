@@ -6,6 +6,8 @@
  * Time: 2:02 PM
  */
 
+declare(strict_types=1);
+
 namespace JStormes\Ldap\SchemaAdapter;
 
 use JStormes\Ldap\Entity\UserEntity;

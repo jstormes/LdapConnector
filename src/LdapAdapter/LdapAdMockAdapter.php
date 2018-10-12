@@ -6,6 +6,8 @@
  * Time: 1:32 PM
  */
 
+declare(strict_types=1);
+
 namespace JStormes\Ldap\LdapAdapter;
 
 
