@@ -71,6 +71,7 @@ $groups = $user->getUserGroups();
 
 The interactive testing code is in `bin\test_ldap.php`.
 
+* `docker-compose run composer install`
 * `docker-compose run bash`
   * `test_ldap.php`
   * LDAP Username: `testUser`
