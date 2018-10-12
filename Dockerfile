@@ -5,7 +5,7 @@ FROM php:7
 ############################################################################
 RUN apt-get update \
     && apt-get install -y curl wget git zip unzip zlib1g-dev libpng-dev \
-       gnupg2 libldap2-dev ssl-cert \
+       gnupg2 libldap2-dev ssl-cert joe \
     && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
     && docker-php-ext-install gd zip ldap
 
@@ -21,17 +21,15 @@ RUN cd ~ \
     && chmod u+x bin/composer \
     && cp bin/composer /opt/
 # Add our script files so they can be found
-ENV PATH /opt/vendor/bin:~/bin:~/.composer/vendor/bin:$PATH
+ENV PATH /opt/project/vendor/bin:/opt/project/bin:~/bin:~/.composer/vendor/bin:$PATH
 
 ############################################################################
 # Setup XDebug, always try and start XDebug connection to host.docker.internal
 ############################################################################
 RUN yes | pecl install xdebug \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini
-ENV PHP_IDE_CONFIG="serverName=ldap_test"
+    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini
+RUN echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini
+ENV PHP_IDE_CONFIG="serverName=ldap"
 
 #############################################################################
 # Setup OpenLDAP server
