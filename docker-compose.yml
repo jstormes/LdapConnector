@@ -3,7 +3,7 @@ version: '3'
 services:
   phpunit:
     build: .
-    entrypoint: ./bin/test.sh
+    entrypoint: ./bin/phpunit.sh
     environment:
         XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_autostart=1
     volumes:

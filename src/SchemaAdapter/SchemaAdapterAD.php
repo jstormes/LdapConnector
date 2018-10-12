@@ -16,13 +16,19 @@ class SchemaAdapterAD extends SchemaAdapterAbstract
 {
     /** @var string */
     private $userName;
-    
-    public function getRdn(string $userName)
+
+    /**
+     * @inheritdoc
+     */
+    public function getRdn(string $userName): string
     {
         $this->userName = $userName;
         return $this->config['Domain'].'\\'.$userName;
     }
 
+    /**
+     * @inheritdoc
+     */
     function getUserDetails(LdapAdapterInterface $connector)
     {
         $baseDN = $this->config['LdapBaseDN'];
@@ -33,6 +39,9 @@ class SchemaAdapterAD extends SchemaAdapterAbstract
         return $results;
     }
 
+    /**
+     * @inheritdoc
+     */
     function hydrateUserEntity(UserEntity $userEntity, array $results)
     {
         $userEntity->setUserName($this->userName);
@@ -60,7 +69,5 @@ class SchemaAdapterAD extends SchemaAdapterAbstract
             $userEntity->setUserGroups($groups);
         }
     }
-
-    
 
 }

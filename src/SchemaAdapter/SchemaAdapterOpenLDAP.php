@@ -17,12 +17,18 @@ class SchemaAdapterOpenLDAP extends SchemaAdapterAbstract
     /** @var string */
     private $userName;
 
-    public function getRdn(string $userName)
+    /**
+     * @inheritdoc
+     */
+    public function getRdn(string $userName): string
     {
         $this->userName = $userName;
         return "CN=${userName},".$this->config['LdapBaseDN'];
     }
 
+    /**
+     * @inheritdoc
+     */
     function getUserDetails(LdapAdapterInterface $connector)
     {
         $baseDN = $this->config['LdapBaseDN'];
@@ -34,6 +40,9 @@ class SchemaAdapterOpenLDAP extends SchemaAdapterAbstract
         return $results;
     }
 
+    /**
+     * @inheritdoc
+     */
     function hydrateUserEntity(UserEntity $userEntity, array $results)
     {
         $userEntity->setUserName($this->userName);

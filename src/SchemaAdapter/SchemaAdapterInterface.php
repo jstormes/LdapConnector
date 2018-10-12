@@ -19,17 +19,17 @@ interface SchemaAdapterInterface
     /**
      * Get the DNS name or IP address of the LDAP server;
      *
-     * @return mixed
+     * @return string
      */
-    public function getServer();
+    public function getServer(): string;
 
     /**
      * Get the RDN syntax for the User Name to connect to the LDAP server.
      *
      * @param $username
-     * @return mixed
+     * @return string
      */
-    public function getRdn(string $username);
+    public function getRdn(string $username): string;
 
     /**
      * Get the Raw user details from the LDAP server.

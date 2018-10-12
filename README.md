@@ -8,8 +8,8 @@ Email address and Group Membership.
 This composer package provides that very limited LDAP functionality, implemented with a consistent interface across 
 both AD and Open LDAP.
 
-This package also forces TLS only connections to both LDAP and AD, allowing the public TLS certificate to be provided 
-via a file path.  In today's insecure world, this package requires a TLS connection to the LDAP server.
+This package also forces TLS only connections to the LDAP server.  The public certificate for the LDAP server **MUST** 
+be available to the PHP server's chain of trust.
 
 ## CLI Testing Quick Start 
 
@@ -69,7 +69,7 @@ $groups = $user->getUserGroups();
 
 ## Mock LdapAdapters
 
-The LdapAdapter is mostly a wrapper for code that is difficult to unit test.  To make TDD simpler, we created mock 
+The LdapAdapter is mostly a wrapper for code that is difficult to unit test.  To make TDD simpler, I created mock 
 versions of this hard to unit test code.
 
 Two versions of the LdapAdapter were created.  The first, `LdapAdMockAdapter.php` is for mocking a connection to a 
@@ -78,5 +78,5 @@ Microsoft AD over LDAP.
 
 The second mock `LdapOpenLdapMockAdatper.php`, simulates a connection to a Open LDAP server.  
 
-Using both mocks it was possible to do TDD using these mocks as stand ins for a real LDAP servers.
+Using both mocks it was possible to do TDD using these mocks as stand ins for the real LDAP servers.
 

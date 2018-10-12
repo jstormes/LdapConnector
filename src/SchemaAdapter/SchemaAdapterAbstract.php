@@ -27,7 +27,11 @@ abstract class SchemaAdapterAbstract implements SchemaAdapterInterface
         $this->config = $this->parseServer($serverString);
     }
 
-    public function getServer()
+    /**
+     * @inheritdoc
+     * @return string
+     */
+    public function getServer(): string
     {
         return $this->config['DnsName'];
     }
@@ -41,9 +45,9 @@ abstract class SchemaAdapterAbstract implements SchemaAdapterInterface
     /**
      * @inheritdoc
      * @param $username
-     * @return mixed
+     * @return string
      */
-    abstract public function getRdn(string $username);
+    abstract public function getRdn(string $username): string;
 
     /**
      * @inheritdoc
