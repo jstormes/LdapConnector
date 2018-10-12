@@ -67,6 +67,22 @@ $groups = $user->getUserGroups();
 
 ```
 
+## Interactive Testing
+
+The interactive testing code is in `bin\test_ldap.php`.
+
+* `docker-compose run bash`
+  * `test_ldap.php`
+  * LDAP Username: `testUser`
+  * Password: `test`
+  
+To test with your own LDAP setup change the line 
+`LDAP_SERVER: LOOPBACK:us.loopback.world:DC=us,DC=loopback,DC=world:OpenLDAP` in the file `docker-compose.yml` to point
+to your own server and restart the docker-compose command.
+
+This Interactive Testing session uses XDebug, change the XDebug line to match your setup.
+
+
 ## Mock LdapAdapters
 
 The LdapAdapter is mostly a wrapper for code that is difficult to unit test.  To make TDD simpler, I created mock 
