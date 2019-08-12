@@ -11,6 +11,14 @@ both AD and Open LDAP.
 This package also forces TLS only connections to the LDAP server.  The public certificate for the LDAP server **MUST** 
 be available to the PHP server's chain of trust.
 
+# TODO:
+
+add password change:
+
+Found hint as to how at
+
+https://stackoverflow.com/questions/997424/active-directory-vs-openldap
+
 ## CLI Testing Quick Start 
 
 Make sure you have Docker and Docker Compose installed.
