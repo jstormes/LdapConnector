@@ -19,6 +19,8 @@ Found hint as to how at
 
 https://stackoverflow.com/questions/997424/active-directory-vs-openldap
 
+https://dotcms.com/docs/latest/active-directory-error-codes
+
 ## CLI Testing Quick Start 
 
 Make sure you have Docker and Docker Compose installed.
