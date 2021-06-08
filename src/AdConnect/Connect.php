@@ -11,6 +11,9 @@ class Connect
 {
     private $ldapResource;
     private $config=[];
+
+    private $rootDomainNamingContext=''; // "DC=xxx,DC=yyy,DC=zzz"
+    private $rootDomain='digitalroominc.com'; // "xxx.yyy.zzz"
     
     private $user;
     private $password;
@@ -39,9 +42,9 @@ class Connect
         $this->config = $config;
     }
 
-    public function searchServerConfig()
+    public function setConfigFromLdapServer()
     {
-        return $this->searchBase('','(objectClass=*)',['*']);
+        return ($this->config = $this->searchBase('','(objectClass=*)',['*']));
     }
 
     public function searchNetBIOSNames()
@@ -87,9 +90,17 @@ class Connect
      * @throws Exception
      */
     public function bind($user, $password) {
+
+        // If user contains a '\' or a '@' or a ' '
+        if(preg_match('/[\\\\ @]/', $user) === 1) {
+            $this->user=ldap_escape($user,"", LDAP_ESCAPE_FILTER);
+        }
+        else {
+            if (empty($this->rootDomain)) throw new Exception('rootDomain is not set.');
+            $this->user=ldap_escape($user."@".$this->rootDomain,"", LDAP_ESCAPE_FILTER);
+        }
         
-        $this->user=$user;
-        $this->password=$password;
+        $this->password=ldap_escape($password,"", LDAP_ESCAPE_FILTER);
         
         $this->rebind($this->ldapResource);
     }
@@ -114,7 +125,7 @@ class Connect
         if (($data = ldap_get_entries($this->ldapResource, $searchResults))===false)
             throw new Exception(ldap_error($this->ldapResource));
 
-        return $this->ldapParse($data);
+        return $data;
     }
 
     public function searchOneLevel($baseDN, $filter, $attributes) {
@@ -124,7 +135,7 @@ class Connect
         if (($data = ldap_get_entries($this->ldapResource, $searchResults))===false)
             throw new Exception(ldap_error($this->ldapResource));
 
-        return $this->ldapParse($data);
+        return $data;
     }
 
     public function searchSubTree($baseDN, $filter, $attributes) {
@@ -134,7 +145,7 @@ class Connect
         if (($data = ldap_get_entries($this->ldapResource, $searchResults))===false)
             throw new Exception(ldap_error($this->ldapResource));
 
-        return $this->ldapParse($data);
+        return $data;
     }
 
     /**
@@ -186,7 +197,7 @@ class Connect
      * @return array|mixed
      * @throws \Exception
      */
-    private function parseLdapData($data)  {
+    public function parseLdapData($data)  {
         
         $returnVale = [];
 
@@ -232,14 +243,38 @@ class Connect
         }
         return $returnVale;
     }
-    
-    private function ldapParse($data) {
-        
-        $results = $this->parseLdapData($data);
-        if (count($results)==1) {
-            return $results[0];
-        }
-        return $results;
+
+    /**
+     * @return string
+     */
+    public function getRootDomainNamingContext(): string
+    {
+        return $this->rootDomainNamingContext;
     }
 
+    /**
+     * @param string $rootDomainNamingContext
+     */
+    public function setRootDomainNamingContext(string $rootDomainNamingContext): void
+    {
+        $this->rootDomainNamingContext = $rootDomainNamingContext;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getRootDomain(): string
+    {
+        return $this->rootDomain;
+    }
+
+    /**
+     * @param string $rootDomain
+     */
+    public function setRootDomain(string $rootDomain): void
+    {
+        $this->rootDomain = $rootDomain;
+    }
+
+    
 }
