@@ -15,7 +15,7 @@ class Connect
     public function __construct(string $server)
     {
         if (($this->ldapResource = ldap_connect($server)) === false)
-            throw new Exception("LDAP-URI was not parseable");
+            throw new Exception("LDAP-URI \"($server)\" was not parseable");
 
         if ((ldap_set_rebind_proc($this->ldapResource, array($this, 'rebind')))===false)
             throw new Exception(ldap_error($this->ldapResource));
@@ -44,6 +44,7 @@ class Connect
      * 0x775 - account locked
      *
      * Eample Error: "80090308: LdapErr: DSID-0C0903CF, comment: AcceptSecurityContext error, data 52e, v2580"
+     * https://dotcms.com/docs/latest/active-directory-error-codes
      *
      * @param $extended_error
      * @return int
@@ -66,6 +67,8 @@ class Connect
             if (ldap_get_option($this->ldapResource, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
                 echo "Error Binding to LDAP: $extended_error";
                 $this->parseAdError($extended_error);
+                // Switch on Error
+                // on error type thorw error type.
             } else {
                 echo "Error Binding to LDAP: No additional information is available.";
             }
