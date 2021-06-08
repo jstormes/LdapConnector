@@ -13,7 +13,7 @@ class Connect
     private $config=[];
     
     private $user;
-    private$password;
+    private $password;
 
     public function __construct(string $server)
     {
@@ -90,29 +90,11 @@ class Connect
         
         $this->user=$user;
         $this->password=$password;
-
-        ldap_set_option($this->ldapResource, LDAP_OPT_PROTOCOL_VERSION, 3);
-
-        if ((ldap_bind($this->ldapResource, $user, $password))===false){
-
-            if (ldap_get_option($this->ldapResource, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
-                echo "Error Binding to LDAP: $extended_error";
-                $this->parseAdError($extended_error);
-                // Switch on Error
-                // on error type thorw error type.
-            } else {
-                echo "Error Binding to LDAP: No additional information is available.";
-            }
-        }
-
-        ldap_set_option($this->ldapResource, LDAP_OPT_REFERRALS, 1);
-        if ((ldap_set_rebind_proc($this->ldapResource, [$this,'rebind']))===false)
-            throw new Exception(ldap_error($this->ldapResource));
-
-//        throw new Exception(ldap_error($this->ldapResource));
+        
+        $this->rebind($this->ldapResource);
     }
 
-    public function rebind($ldap, $referral) {
+    public function rebind($ldap, $referral=null) {
 
         ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldap, LDAP_OPT_REFERRALS, 1);
@@ -123,7 +105,6 @@ class Connect
             return 1; // Yes, a 1 means a failure.
         }
         return 0; // Yes, return a 0 on success.
-    
     }
 
     public function searchBase($baseDN, $filter, $attributes) {
@@ -157,8 +138,49 @@ class Connect
     }
 
     /**
+     * https://php.uz/manual/en/function.mssql-guid-string.php#119391
+     *
+     * @param $binguid
+     * @return string
+     */
+    function convertBinToMSGuid($binguid)
+    {
+        $unpacked = unpack('Va/v2b/n2c/Nd', $binguid);
+        return sprintf('%08X-%04X-%04X-%04X-%04X%08X', $unpacked['a'], $unpacked['b1'], $unpacked['b2'], $unpacked['c1'], $unpacked['c2'], $unpacked['d']);
+    }
+
+    /**
+     * https://php.uz/manual/en/function.mssql-guid-string.php#81219
+     *
+     * @param $guid
+     * @return bool
+     */
+    function isGuid($guid)
+    {
+        if (!is_string($guid)) return false;
+        if (strlen($guid)!=16) return false;
+        $version=ord(substr($guid,7,1))>>4;
+        // version 1 : Time-based version Uses timestamp, clock sequence, and MAC network card address
+        // version 2 : Reserverd
+        // version 3 : Name-based version Constructs values from a name for all sections
+        // version 4 : Random version Use random numbers for all sections
+        if ($version<1 || $version>4) return false;
+        $typefield=ord(substr($guid,8,1))>>4;
+        $type=-1;
+        if (($typefield & bindec('1000'))==bindec('0000')) $type=0; // type 0 indicated by 0??? Reserved for NCS (Network Computing System) backward compatibility
+        if (($typefield & bindec('1100'))==bindec('1000')) $type=2; // type 2 indicated by 10?? Standard format
+        if (($typefield & bindec('1110'))==bindec('1100')) $type=6; // type 6 indicated by 110? Reserved for Microsoft Corporation backward compatibility
+        if (($typefield & bindec('1110'))==bindec('1110')) $type=7; // type 7 indicated by 111? Reserved for future definition
+        // assuming Standard type for SQL GUIDs
+        if ($type!=2) return false;
+        return true;
+
+    }
+
+    /**
      * Puts the LDAP data into a more PHP friendly format so that "foreach(...)" can be used easer.
      * Also changes Acitve Directory DateTime to PHP frienly DateTime.
+     * Reforamt binary GUIDs to string GUTIDs.
      * 
      * @param $data
      * @return array|mixed
@@ -176,6 +198,9 @@ class Connect
                 else if (isset($data[$data[$i]])) {
                     $returnVale[$data[$i]] = $this->parseLdapData($data[$data[$i]]);
                 }
+                else if ($this->isGuid($data[$i])) {
+                    $returnVale[] = $this->convertBinToMSGuid($data[$i]);
+                }
                 else {
                     //19870901000000Z date format parse
                     if(preg_match('/\\d{14}.0Z/', $data[$i])) {
@@ -188,10 +213,16 @@ class Connect
                         $returnVale[] = $data[$i];
                     }
                 }
+
             }
         }
         else {
-            $returnVale[] = $data;
+            if ($this->isGuid($data)) {
+                $returnVale[] = $this->convertBinToMSGuid($data);
+            }
+            else {
+                $returnVale[] = $data;
+            }
         }
 
         if (is_array($returnVale)) {
