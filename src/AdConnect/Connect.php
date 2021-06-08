@@ -43,6 +43,8 @@ class Connect
      * 0x773 - user must reset password
      * 0x775 - account locked
      *
+     * Eample Error: "80090308: LdapErr: DSID-0C0903CF, comment: AcceptSecurityContext error, data 52e, v2580"
+     *
      * @param $extended_error
      * @return int
      */
