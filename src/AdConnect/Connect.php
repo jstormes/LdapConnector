@@ -31,8 +31,45 @@ class Connect
         return $this->config;
     }
 
-    public function bind($user, $password) {
+    /**
+     * Active Directory Extnded Error Codes:
+     *
+     * 0x525 - user not found
+     * 0x52e - invalid credentials
+     * 0x530 - not permitted to logon at this time
+     * 0x532 - password expired
+     * 0x533 - account disabled
+     * 0x701 - account expired
+     * 0x773 - user must reset password
+     * 0x775 - account locked
+     *
+     * @param $extended_error
+     * @return int
+     */
+    private function parseAdError($extended_error) : int {
 
+        $errorInHex = 0;
+
+        if (($dataStr=strstr($extended_error,'data'))!==false) {
+            $parts=explode(' ',$dataStr);
+            $errorInHex = str_replace(',','',$parts[1]);
+        }
+
+        return hexdec($errorInHex);
+    }
+
+    public function bind($user, $password) {
+        if ((@ldap_bind($this->ldapResource, $user, $password))===false){
+
+            if (ldap_get_option($this->ldapResource, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
+                echo "Error Binding to LDAP: $extended_error";
+                $this->parseAdError($extended_error);
+            } else {
+                echo "Error Binding to LDAP: No additional information is available.";
+            }
+        }
+
+        throw new Exception(ldap_error($this->ldapResource));
     }
 
     public function rebind($ldap, $referral) {
