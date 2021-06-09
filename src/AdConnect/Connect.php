@@ -13,7 +13,7 @@ class Connect
     private $config=[];
 
     private $rootDomainNamingContext=''; // "DC=xxx,DC=yyy,DC=zzz"
-    private $rootDomain='digitalroominc.com'; // "xxx.yyy.zzz"
+    private $rootDomain=''; // "xxx.yyy.zzz"
     
     private $user;
     private $password;
@@ -113,9 +113,9 @@ class Connect
 
         if (!ldap_bind($ldap, $this->user, $this->password)) {
             echo "\n\nCould not bind to referral server: {$referral}\n\n";
-            return 1; // Yes, a 1 means a failure.
+            return 1; // Yes, a 1 means a failure.  This is a C library.
         }
-        return 0; // Yes, return a 0 on success.
+        return 0; // Yes, return a 0 on success.  This a C library.
     }
 
     public function searchBase($baseDN, $filter, $attributes) {
@@ -276,5 +276,59 @@ class Connect
         $this->rootDomain = $rootDomain;
     }
 
-    
+
+    /**
+     * https://stackoverflow.com/questions/7084482/how-to-save-the-ldap-ssl-certificate-from-openssl
+     *
+     * @param string $server The server name to connect to
+     * @param int $port The standard LDAP port
+     * @return array In the form of ['peer_certificate' => '', 'peer_certificate_chain' => [] ]
+     */
+    function getLdapSslCertificates($server, $port = 389)
+    {
+        $certificates = [
+            'peer_certificate' => null,
+            'peer_certificate_chain' => [],
+        ];
+        // This is the hex encoded extendedRequest for the STARTTLS operation...
+        $startTls = hex2bin("301d02010177188016312e332e362e312e342e312e313436362e3230303337");
+        $opts = [
+            'ssl' => [
+                'capture_peer_cert' => true,
+                'capture_peer_cert_chain' => true,
+                'allow_self_signed' => true,
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
+        ];
+
+        $context = stream_context_create($opts);
+        $client = @stream_socket_client(
+            "tcp://$server:$port",
+            $errorNumber,
+            $errorMessage,
+            5,
+            STREAM_CLIENT_CONNECT,
+            $context
+        );
+        @stream_set_timeout($client, 2);
+        @fwrite($client, $startTls);
+        @fread($client, 10240);
+        @stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+        $info = @stream_context_get_params($client);
+
+        if (!$info) {
+            return $certificates;
+        }
+        openssl_x509_export($info['options']['ssl']['peer_certificate'], $certificates['peer_certificate']);
+
+        foreach ($info['options']['ssl']['peer_certificate_chain'] as $index => $cert) {
+            $certChain = '';
+            openssl_x509_export($cert, $certChain);
+            $certificates['peer_certificate_chain'][$index] = $certChain;
+        }
+        @fclose($client);
+
+        return $certificates;
+    }
 }
