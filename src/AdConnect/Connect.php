@@ -110,12 +110,14 @@ class Connect
         ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldap, LDAP_OPT_REFERRALS, 1);
         ldap_set_rebind_proc($ldap, [$this,'rebind']);
-
-        if (!ldap_bind($ldap, $this->user, $this->password)) {
-            echo "\n\nCould not bind to referral server: {$referral}\n\n";
-            return 1; // Yes, a 1 means a failure.  This is a C library.
+        
+        if (ldap_start_tls($ldap)){
+            if (ldap_bind($ldap, $this->user, $this->password)) {
+                return 0; // Yes, return a 0 on success.  This a C library.
+            }
         }
-        return 0; // Yes, return a 0 on success.  This a C library.
+        echo "\n\nCould not bind to referral server: {$referral}\n\n";
+        return 1; // Yes, a 1 means a failure.  This is a C library.
     }
 
     public function searchBase($baseDN, $filter, $attributes) {
