@@ -11,6 +11,7 @@ class Connect
 {
     private $ldapResource;
 
+    private $server='';
     private $rootDomain=''; // "xxx.yyy.zzz"
     
     private $user;
@@ -18,13 +19,8 @@ class Connect
 
     public function __construct(string $server)
     {
-        if (($this->ldapResource = ldap_connect($server)) === false)
-            throw new Exception("LDAP-URI \"($server)\" was not parseable");
-
+        $this->server = $server;
         $this->rootDomain = $server;
-
-        ldap_set_option($this->ldapResource, LDAP_OPT_PROTOCOL_VERSION, 3);
-        
     }
 
     public function getLdapServerConfig()
@@ -93,20 +89,28 @@ class Connect
         
         $this->password=ldap_escape($password,"", LDAP_ESCAPE_FILTER);
 
+        if (($ldap = ldap_connect($this->server)) === false)
+            throw new Exception("LDAP-URI \"($server)\" was not parseable");
 
-        ldap_set_option($this->ldapResource, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($this->ldapResource, LDAP_OPT_REFERRALS, 1);
-//        ldap_set_rebind_proc($this->ldapResource, 'JStormes\Ldap\AdConnect\Connect::rebind');
-        ldap_set_rebind_proc($this->ldapResource, 'Self::rebind');
-        
-        try {
-            $i=$this->rebind($this->ldapResource);
+        ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($ldap, LDAP_OPT_NETWORK_TIMEOUT, 2);
+        ldap_set_option($ldap, LDAP_OPT_REFERRALS, 1);
+        ldap_set_rebind_proc($ldap, 'Self::_bind');
+
+        if (ldap_start_tls($ldap)===true){
+            if (ldap_bind($ldap, $this->user, $this->password)===true){
+                $this->ldapResource=$ldap;
+                echo ldap_error($ldap)."\n";
+            }
         }
-        catch (Exception $ex) {
-            throw new Exception('error loggin in.');
-        }
+        echo ldap_error($ldap)."\n";
+
+
+
         
-        echo ldap_error($this->ldapResource)."\n\n";
+//        $this->_bind($this->ldapResource, $this->rootDomain);
+        
+//        echo ldap_error($this->ldapResource)."\n\n";
         
     }
 
@@ -121,20 +125,23 @@ class Connect
      * @param null $referral
      * @return int
      */
-    public function rebind($ldap, $referral=null) {
+    private function _bind($ldap, $referral) {
+
+        echo "bind to {$referral} ";
 
         ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($ldap, LDAP_OPT_NETWORK_TIMEOUT, 2);
         ldap_set_option($ldap, LDAP_OPT_REFERRALS, 1);
-        ldap_set_rebind_proc($ldap, 'Self::rebind');
+        ldap_set_rebind_proc($ldap, 'Self::_bind');
         
         if (ldap_start_tls($ldap)===true){
-            if (ldap_bind($ldap, $this->user, $this->password)===true ){
-//                echo "redirect: {$referral}\n\n";
+            if (ldap_bind($ldap, $this->user, $this->password)===true){
+                echo ldap_error($ldap)."\n";
                 return 0; // Yes, return a 0 on success.  This called from a C library.
             }
         }
-//        throw new Exception("\n\nCould not bind to referral server: {$referral}\n\n");
-        echo "\n\nCould not bind to referral server: {$referral}\n\n";
+        echo ldap_error($ldap)."\n";
+        echo "Could not bind to referral server: {$referral}\n\n";
         return 1; // Yes, a 1 means a failure.  This is called from a C library.
     }
 
