@@ -24,6 +24,7 @@ class Connect
         $this->rootDomain = $server;
 
         ldap_set_option($this->ldapResource, LDAP_OPT_PROTOCOL_VERSION, 3);
+        
     }
 
     public function getLdapServerConfig()
@@ -34,6 +35,12 @@ class Connect
     public function getNetBIOSNames()
     {
         return $this->searchSubTree('DC=digitalroominc,DC=com','(nETBIOSName=*)',['*']);
+    }
+
+    public function whoAmI() {
+//        return ldap_exop_whoami($this->ldapResource);
+        
+        return $this->searchSubTree('DC=digitalroominc,DC=com','(samaccountname=james.s)',['*']);
     }
 
     /**
@@ -85,25 +92,50 @@ class Connect
         }
         
         $this->password=ldap_escape($password,"", LDAP_ESCAPE_FILTER);
+
+
+        ldap_set_option($this->ldapResource, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($this->ldapResource, LDAP_OPT_REFERRALS, 1);
+//        ldap_set_rebind_proc($this->ldapResource, 'JStormes\Ldap\AdConnect\Connect::rebind');
+        ldap_set_rebind_proc($this->ldapResource, 'Self::rebind');
         
-        $this->rebind($this->ldapResource);
+        try {
+            $i=$this->rebind($this->ldapResource);
+        }
+        catch (Exception $ex) {
+            throw new Exception('error loggin in.');
+        }
+        
+        echo ldap_error($this->ldapResource)."\n\n";
+        
     }
 
+    /**
+     * This is an enterface between PHP and C library callback.  Threre are alot of restrictions about what you
+     * should and should not do in this function.  One of them is throw an exception.  DO NOT THROW A PHP EXCEPTION
+     * FROM THIS FUNCTION, IT CAN BE CALLED FROM C CODE AND MAY HAVE NO PHP CONTEXT!!!! Any error in this code will
+     * tigger an error in the PHP call stack after the C code returns.  Check the `ldap_error()` after all 
+     * `ldap_*()` called funcitons for errors from this function.
+     *
+     * @param $ldap
+     * @param null $referral
+     * @return int
+     */
     public function rebind($ldap, $referral=null) {
 
         ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldap, LDAP_OPT_REFERRALS, 1);
-        ldap_set_rebind_proc($ldap, [$this,'rebind']);
+        ldap_set_rebind_proc($ldap, 'Self::rebind');
         
         if (ldap_start_tls($ldap)===true){
             if (ldap_bind($ldap, $this->user, $this->password)===true ){
 //                echo "redirect: {$referral}\n\n";
-                return 0; // Yes, return a 0 on success.  This a C library.
+                return 0; // Yes, return a 0 on success.  This called from a C library.
             }
         }
 //        throw new Exception("\n\nCould not bind to referral server: {$referral}\n\n");
         echo "\n\nCould not bind to referral server: {$referral}\n\n";
-        return 1; // Yes, a 1 means a failure.  This is a C library.
+        return 1; // Yes, a 1 means a failure.  This is called from a C library.
     }
 
     public function searchBase($baseDN, $filter, $attributes) {
