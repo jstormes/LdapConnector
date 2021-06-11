@@ -34,9 +34,16 @@ class Connect
     }
 
     public function whoAmI() {
-//        return ldap_exop_whoami($this->ldapResource);
-        
-        return $this->searchSubTree('DC=digitalroominc,DC=com','(samaccountname=james.s)',['*']);
+        $whoAmI = ldap_exop_whoami($this->ldapResource);
+        $parts = explode('\\',$whoAmI);
+        $samaccountname=ldap_escape($parts[1],"", LDAP_ESCAPE_FILTER);
+
+//        echo "\n\n".$samaccountname."\n\n";
+        $samaccountname=$samaccountname;
+//        echo "t";
+//        return [];
+        return $this->searchSubTree('DC=digitalroominc,DC=com',"(samaccountname=".$samaccountname.")",['*']);
+//        return $this->searchSubTree('DC=digitalroominc,DC=com',"(samaccountname=james.s)",['*']);
     }
 
     /**
