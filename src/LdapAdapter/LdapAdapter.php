@@ -36,7 +36,7 @@ class LdapAdapter extends LdapAdapterAbstract
         }
         ldap_start_tls($ldapResource);
 
-        if (@ldap_bind($ldapResource, $rdn, $password)) {
+        if (@ldap_bind($ldapResource, $rdn, ldap_escape($password,"", LDAP_ESCAPE_FILTER))) {
             $this->ldapResources[] = $ldapResource;
 
             return $this->isConnected();
