@@ -13,6 +13,7 @@ class Connect
 
     private $server='';
     private $rootDomain=''; // "xxx.yyy.zzz"
+    private $baseDN=''; // "DN=somthing,DN=com"
     
     private $user;
     private $password;
@@ -23,15 +24,105 @@ class Connect
         $this->rootDomain = $server;
     }
 
-    public function getLdapServerConfig()
+    /**
+     * https://serverfault.com/questions/153526/how-can-i-find-the-ldap-server-in-the-dns-on-windows/153531
+     *
+     * @param $servername
+     * @return array
+     */
+    public function getLdapServersFromDns($servername)
+    {
+        $results=[];
+        $dnsResults = dns_get_record ( '_ldap._tcp.'.$servername , DNS_SRV);
+
+        foreach($dnsResults as $key=>$value) {
+            if (isset($value['target']))
+                $results[] = $value['target'];
+        }
+        
+        return $results;
+    }
+
+    /**
+     * https://stackoverflow.com/questions/7084482/how-to-save-the-ldap-ssl-certificate-from-openssl
+     *
+     * @param string $server The server name to connect to
+     * @param int $port The standard LDAP port
+     * @return array In the form of ['peer_certificate' => '', 'peer_certificate_chain' => [] ]
+     */
+    public function getSslCertificatesFromNetwork($server, $port = 389)
+    {
+        $certificates = [
+            'peer_certificate' => null,
+            'peer_certificate_chain' => [],
+        ];
+        // This is the hex encoded extendedRequest for the STARTTLS operation...
+        $startTls = hex2bin("301d02010177188016312e332e362e312e342e312e313436362e3230303337");
+        $opts = [
+            'ssl' => [
+                'capture_peer_cert' => true,
+                'capture_peer_cert_chain' => true,
+                'allow_self_signed' => true,
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
+        ];
+
+        $context = stream_context_create($opts);
+        $client = @stream_socket_client(
+            "tcp://$server:$port",
+            $errorNumber,
+            $errorMessage,
+            5,
+            STREAM_CLIENT_CONNECT,
+            $context
+        );
+        @stream_set_timeout($client, 2);
+        @fwrite($client, $startTls);
+        @fread($client, 10240);
+        @stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+        $info = @stream_context_get_params($client);
+
+        if (!$info) {
+            return $certificates;
+        }
+        openssl_x509_export($info['options']['ssl']['peer_certificate'], $certificates['peer_certificate']);
+
+        foreach ($info['options']['ssl']['peer_certificate_chain'] as $index => $cert) {
+            $certChain = '';
+            openssl_x509_export($cert, $certChain);
+            $certificates['peer_certificate_chain'][$index] = $certChain;
+        }
+        @fclose($client);
+
+        return $certificates;
+    }
+
+    public function getLdapBaseConfigFromServer()
     {
         return ($this->searchBase('','(objectClass=*)',['*']));
     }
 
     public function getNetBIOSNames()
     {
-        return $this->searchSubTree('DC=digitalroominc,DC=com','(nETBIOSName=*)',['*']);
+        return $this->searchSubTree($this->baseDN,'(nETBIOSName=*)',['*']);
     }
+
+
+
+
+
+    /**
+     * https://ldapwiki.com/wiki/Ambiguous%20Name%20Resolution#section-Ambiguous+Name+Resolution-MicrosoftActiveDirectoryAndBindRequest
+     *
+     * @param $id (NetBiosADName\samaccountname | emailAddress | fullName | emailUserId)
+     * @param $password
+     */
+    public function findUserByIdAndPAssword($id, $password)
+    {
+
+    }
+
 
     public function whoAmI() {
         $whoAmI = ldap_exop_whoami($this->ldapResource);
